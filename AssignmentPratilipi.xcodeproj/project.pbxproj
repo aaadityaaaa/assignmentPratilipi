@@ -23,6 +23,11 @@
 		09FAF43529604BD600E5866A /* HelperEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF43429604BD600E5866A /* HelperEnum.swift */; };
 		09FAF43829605D9A00E5866A /* UIView+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF43729605D9A00E5866A /* UIView+EXT.swift */; };
 		09FAF43A29605F1500E5866A /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF43929605F1500E5866A /* LoadingView.swift */; };
+		09FAF43C29607E8500E5866A /* CustomSmallLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF43B29607E8500E5866A /* CustomSmallLabel.swift */; };
+		09FAF43E296094FD00E5866A /* CompositionalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF43D296094FD00E5866A /* CompositionalView.swift */; };
+		09FAF4422960965900E5866A /* bottomSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF4412960965900E5866A /* bottomSectionCell.swift */; };
+		09FAF444296096F300E5866A /* VerticalStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF443296096F300E5866A /* VerticalStackView.swift */; };
+		09FAF4462960AE8D00E5866A /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF4452960AE8D00E5866A /* Follower.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +49,11 @@
 		09FAF43429604BD600E5866A /* HelperEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperEnum.swift; sourceTree = "<group>"; };
 		09FAF43729605D9A00E5866A /* UIView+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+EXT.swift"; sourceTree = "<group>"; };
 		09FAF43929605F1500E5866A /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		09FAF43B29607E8500E5866A /* CustomSmallLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSmallLabel.swift; sourceTree = "<group>"; };
+		09FAF43D296094FD00E5866A /* CompositionalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionalView.swift; sourceTree = "<group>"; };
+		09FAF4412960965900E5866A /* bottomSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bottomSectionCell.swift; sourceTree = "<group>"; };
+		09FAF443296096F300E5866A /* VerticalStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalStackView.swift; sourceTree = "<group>"; };
+		09FAF4452960AE8D00E5866A /* Follower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Follower.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				09FAF425296012F700E5866A /* Object.swift */,
+				09FAF4452960AE8D00E5866A /* Follower.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -147,8 +158,10 @@
 			isa = PBXGroup;
 			children = (
 				09FAF4202960107200E5866A /* CustomBodyLabel.swift */,
+				09FAF43B29607E8500E5866A /* CustomSmallLabel.swift */,
 				09FAF43229604B9A00E5866A /* CustomImageView.swift */,
 				09FAF43929605F1500E5866A /* LoadingView.swift */,
+				09FAF43D296094FD00E5866A /* CompositionalView.swift */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -157,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				09FAF43029604B5800E5866A /* topSectionCell.swift */,
+				09FAF4412960965900E5866A /* bottomSectionCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -165,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				09FAF43729605D9A00E5866A /* UIView+EXT.swift */,
+				09FAF443296096F300E5866A /* VerticalStackView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -239,11 +254,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09FAF4462960AE8D00E5866A /* Follower.swift in Sources */,
 				09FAF41F295F595E00E5866A /* MainViewModel.swift in Sources */,
+				09FAF444296096F300E5866A /* VerticalStackView.swift in Sources */,
 				09FAF43129604B5800E5866A /* topSectionCell.swift in Sources */,
 				09FAF403295F434900E5866A /* AppDelegate.swift in Sources */,
 				09FAF419295F448600E5866A /* NewsVC.swift in Sources */,
 				09FAF43529604BD600E5866A /* HelperEnum.swift in Sources */,
+				09FAF4422960965900E5866A /* bottomSectionCell.swift in Sources */,
 				09FAF43A29605F1500E5866A /* LoadingView.swift in Sources */,
 				09FAF423296011F200E5866A /* NetworkManager.swift in Sources */,
 				09FAF4292960138600E5866A /* ErrorMessage.swift in Sources */,
@@ -251,7 +269,9 @@
 				09FAF417295F43C000E5866A /* MainVC.swift in Sources */,
 				09FAF43329604B9A00E5866A /* CustomImageView.swift in Sources */,
 				09FAF405295F434900E5866A /* SceneDelegate.swift in Sources */,
+				09FAF43C29607E8500E5866A /* CustomSmallLabel.swift in Sources */,
 				09FAF426296012F700E5866A /* Object.swift in Sources */,
+				09FAF43E296094FD00E5866A /* CompositionalView.swift in Sources */,
 				09FAF4212960107200E5866A /* CustomBodyLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

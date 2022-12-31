@@ -1,5 +1,5 @@
 //
-//  CustomBodyLabel.swift
+//  CustomSmallLabel.swift
 //  AssignmentPratilipi
 //
 //  Created by Aaditya Singh on 31/12/22.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomBodyLabel: UILabel {
+class CustomSmallLabel: UILabel {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,8 +24,8 @@ class CustomBodyLabel: UILabel {
     }
     
     private func configure() {
-        textColor = .white
-        font = UIFont.preferredFont(forTextStyle: .title2)
+        textColor = .secondaryLabel
+        font = UIFont.preferredFont(forTextStyle: .body)
         adjustsFontForContentSizeCategory = true
         adjustsFontSizeToFitWidth = true
         minimumScaleFactor = 0.75
@@ -35,4 +35,5 @@ class CustomBodyLabel: UILabel {
     
 
 }
+
 

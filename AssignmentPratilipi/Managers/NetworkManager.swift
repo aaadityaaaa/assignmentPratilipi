@@ -19,7 +19,7 @@ class NetworkManager {
     private init() {}
     
     func getObjects(page: Int, limit: Int, completed: @escaping (Result<[Object], ErrorMessage>) -> Void) {
-        let endpoint = baseURL + "/list?page=\(page)&limit=\(limit)"
+        let endpoint = "https://api.github.com/users/sallen0400/followers?per_page=\(limit)&page=1"
         guard let url = URL(string: endpoint) else {
             completed(.failure(.unableToCompleteRequest))
             return
@@ -58,13 +58,15 @@ class NetworkManager {
     func downloadImageFromUrl(from urlString: String, completed: @escaping (UIImage?) -> Void) {
             
             let cacheKey = NSString(string: urlString)
-            
+
             if let image = cache.object(forKey: cacheKey) {
                     completed(image)
+                
                 return
             }
             guard let url = URL(string: urlString) else {
                 completed(nil)
+                print("IMAGE DOWNLOAD LINK FOUND NIL")
                 return}
             
             let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -74,6 +76,7 @@ class NetworkManager {
                       let data = data,
                       let image = UIImage(data: data)
                       else {
+                    print("IMAGE DOWNLOAD LINK FOUND NIL")
                     completed(nil)
                     return }
                 self.cache.setObject(image, forKey: cacheKey)
