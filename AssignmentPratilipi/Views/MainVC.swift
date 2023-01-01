@@ -12,7 +12,7 @@ class MainVC: UICollectionViewController {
     
     @StateObject private var viewModel = MainViewModel()
     var objects: [Object] = []    
-    var objects2: [Object] = []
+    var objects2: [Object2] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,8 +21,58 @@ class MainVC: UICollectionViewController {
         collectionView.register(topSectionCell.self, forCellWithReuseIdentifier: "cellID")
         collectionView.register(bottomSectionCell.self, forCellWithReuseIdentifier: "bottomCellID")
         navigationController?.navigationBar.prefersLargeTitles = true
-        getObjects()
-        getObjects2()
+//        getObjects()
+//        getObjects2()
+        setupDiffableDataSource()
+    }
+    
+    enum AppSection {
+        case topSection
+        case bottomSection
+    }
+    lazy var diffableDataSource: UICollectionViewDiffableDataSource<AppSection, AnyHashable> = .init(collectionView: self.collectionView) { collectionView, indexPath, returnedObject -> UICollectionViewCell? in
+        if let returnedObject = returnedObject as? Object {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellID", for: indexPath) as! topSectionCell
+            cell.set(object: returnedObject)
+            return cell
+        }
+        else if let returnedObject = returnedObject as? Object2 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bottomCellID", for: indexPath) as! bottomSectionCell
+            cell.set(object: returnedObject)
+            return cell
+        }
+        return nil
+    }
+    private func setupDiffableDataSource() {
+        collectionView.dataSource = diffableDataSource
+        diffableDataSource.supplementaryViewProvider = . some({
+            (collectionView, kind, indexPath) -> UICollectionReusableView? in
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath)
+            return header
+        })
+        NetworkManager.shared.getObjects(page: 3, limit: 10) { result in
+            switch result {
+            case .success(let objects):
+                NetworkManager.shared.getObjects2 { result in
+                    switch result {
+                    case .success(let objects2):
+                        var snapshot = self.diffableDataSource.snapshot()
+                        //topsection
+                        snapshot.appendSections([.topSection])
+                        snapshot.appendItems(objects, toSection: .topSection)
+                        //bottomsection
+                        snapshot.appendSections([.bottomSection])
+                        snapshot.appendItems(objects2, toSection: .bottomSection)
+                        
+                        self.diffableDataSource.apply(snapshot)
+                    case .failure(let failure):
+                        print(failure)
+                    }
+                }
+            case .failure(let failure):
+                print(failure)
+            }
+        }
     }
     
     init() {
@@ -53,11 +103,12 @@ class MainVC: UICollectionViewController {
     
     static func bottomSection() -> NSCollectionLayoutSection? {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .absolute(295), heightDimension: .absolute(120)))
-        item.contentInsets = .init(top: 0, leading: 10, bottom: 16, trailing: 0)
+        item.contentInsets = .init(top: 0, leading: 0, bottom: 16, trailing: 10)
         
         let group = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .absolute(305), heightDimension: .absolute(300)), subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
+        section.contentInsets.leading = 16
         let kind = UICollectionView.elementKindSectionHeader
         section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension : .fractionalWidth(1), heightDimension: .absolute(50)), elementKind: kind, alignment: .topLeading)]
         return section
@@ -83,7 +134,7 @@ class MainVC: UICollectionViewController {
     }
     
     func getObjects2() {
-        NetworkManager.shared.getObjects(page: 3, limit: 3) { result in
+        NetworkManager.shared.getObjects2 { result in
             switch result {
             case .success(let objects):
                 DispatchQueue.main.async {
@@ -103,7 +154,7 @@ class MainVC: UICollectionViewController {
 
 extension MainVC {
     
-    override func collectionView(_ collectionView: UICollectionView,
+   /* override func collectionView(_ collectionView: UICollectionView,
         numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
             return objects.count
@@ -111,14 +162,14 @@ extension MainVC {
             return objects2.count
         }
         
-    }
+    } */
     
     override func numberOfSections (in collectionView:
         UICollectionView) -> Int {
-        return 2
+        return 0
     }
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+   /* override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellID", for: indexPath) as! topSectionCell
@@ -134,9 +185,12 @@ extension MainVC {
             return cell
         }
         
-    }
+    } */
     
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView { return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath)
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath) as! CompositionalHeader
+        header.label.text = "Specially Featured for you"
+        return header
         
     }
     

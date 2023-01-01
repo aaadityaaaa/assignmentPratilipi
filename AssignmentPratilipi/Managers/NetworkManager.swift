@@ -55,6 +55,44 @@ class NetworkManager {
         task.resume()
     }
     
+    
+    func getObjects2(completed: @escaping (Result<[Object2], ErrorMessage>) -> Void) {
+        let endpoint = "https://api.letsbuildthatapp.com/appstore/social"
+        guard let url = URL(string: endpoint) else {
+            completed(.failure(.unableToCompleteRequest))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            if let _ = error {
+                completed(.failure(.unableToCompleteRequest))
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completed(.failure(.invalidResponse))
+                return
+            }
+            
+            guard let data = data else {
+                completed(.failure(.invalidData))
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let objects = try decoder.decode([Object2].self, from: data)
+                completed(.success(objects))
+            } catch {
+                completed(.failure(.invalidData))
+            }
+        }
+        
+        task.resume()
+    }
+    
     func downloadImageFromUrl(from urlString: String, completed: @escaping (UIImage?) -> Void) {
             
             let cacheKey = NSString(string: urlString)

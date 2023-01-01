@@ -27,6 +27,7 @@ class CustomImageView: UIImageView {
     private func configure() {
         layer.cornerRadius  = 10
         clipsToBounds       = true
+        contentMode = .scaleAspectFill
         image               = placeholderImage
         translatesAutoresizingMaskIntoConstraints = false
     }

@@ -27,8 +27,8 @@ class bottomSectionCell: UICollectionViewCell {
         stackView.fillSuperview()
     }
     
-    func set(object: Object) {
-        imageView.downloadImage(fromURL: object.avatarUrl)
+    func set(object: Object2) {
+        imageView.downloadImage(fromURL: object.imageUrl)
        // topImageLabel.text = object.author
     }
     

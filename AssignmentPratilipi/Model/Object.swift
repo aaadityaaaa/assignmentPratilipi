@@ -7,11 +7,9 @@
 
 import Foundation
 
-//struct Object: Codable, Identifiable, Hashable {
-//    var id: String?
-//    var author: String?
-//    var width: Int?
-//    var height: Int?
-//    var url: String?
-//    var download_url: String?
-//}
+struct Object2: Codable, Identifiable, Hashable {
+    var id: String
+    var name: String
+    var tagline: String
+    var imageUrl: String
+}
