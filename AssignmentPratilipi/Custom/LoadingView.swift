@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoadingVC: UIViewController {
+class LoadingVC: UICollectionViewController {
     
     var containerView: UIView!
 
@@ -33,7 +33,6 @@ class LoadingVC: UIViewController {
         
         activityIndicator.startAnimating()
     }
-    
     
     func dismissLoadingView() {
         DispatchQueue.main.async {

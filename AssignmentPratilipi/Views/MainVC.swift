@@ -8,28 +8,30 @@
 import UIKit
 import SwiftUI
 
-class MainVC: UICollectionViewController {
+class MainVC: LoadingVC {
     
     @StateObject private var viewModel = MainViewModel()
     var objects: [Object] = []    
     var objects2: [Object2] = []
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.register(CompositionalHeader.self, forSupplementaryViewOfKind:
-                                    UICollectionView.elementKindSectionHeader, withReuseIdentifier: "headerID")
+        configureCollectionView()
+        setupDiffableDataSource()
+    }
+    
+    func configureCollectionView() {
+        collectionView.register(CompositionalHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "headerID")
         collectionView.register(topSectionCell.self, forCellWithReuseIdentifier: "cellID")
         collectionView.register(bottomSectionCell.self, forCellWithReuseIdentifier: "bottomCellID")
         navigationController?.navigationBar.prefersLargeTitles = true
-//        getObjects()
-//        getObjects2()
-        setupDiffableDataSource()
     }
     
     enum AppSection {
         case topSection
         case bottomSection
     }
+    
     lazy var diffableDataSource: UICollectionViewDiffableDataSource<AppSection, AnyHashable> = .init(collectionView: self.collectionView) { collectionView, indexPath, returnedObject -> UICollectionViewCell? in
         if let returnedObject = returnedObject as? Object {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellID", for: indexPath) as! topSectionCell
@@ -43,37 +45,65 @@ class MainVC: UICollectionViewController {
         }
         return nil
     }
+    
     private func setupDiffableDataSource() {
+        showLoadingView()
         collectionView.dataSource = diffableDataSource
+        //for the header title above bottom section
         diffableDataSource.supplementaryViewProvider = . some({
             (collectionView, kind, indexPath) -> UICollectionReusableView? in
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath)
             return header
         })
-        NetworkManager.shared.getObjects(page: 3, limit: 10) { result in
-            switch result {
-            case .success(let objects):
-                NetworkManager.shared.getObjects2 { result in
-                    switch result {
-                    case .success(let objects2):
-                        var snapshot = self.diffableDataSource.snapshot()
-                        //topsection
-                        snapshot.appendSections([.topSection])
-                        snapshot.appendItems(objects, toSection: .topSection)
-                        //bottomsection
-                        snapshot.appendSections([.bottomSection])
-                        snapshot.appendItems(objects2, toSection: .bottomSection)
-                        
-                        self.diffableDataSource.apply(snapshot)
-                    case .failure(let failure):
-                        print(failure)
-                    }
+        if #available(iOS 16, *) {
+            var snapshot = self.diffableDataSource.snapshot()
+            snapshot.appendSections([.topSection, .bottomSection])
+            Task {
+                do {
+                    //top section
+                    self.objects = try await NetworkManager.shared.getObjectsAsync(limit: 10)
+                    snapshot.appendItems(objects, toSection: .topSection)
+                    //bottom section
+                    self.objects2 = try await NetworkManager.shared.getObjects2Async()
+                    snapshot.appendItems(objects2, toSection: .bottomSection)
+                    DispatchQueue.main.async { self.diffableDataSource.apply(snapshot) }
+                    self.dismissLoadingView()
+                    print("ASYNC AWAIT IS RUNNING")
+                } catch {
+                    self.dismissLoadingView()
+                    print(error)
                 }
-            case .failure(let failure):
-                print(failure)
+            }
+        }
+        else {
+            //this works for iOS13
+            NetworkManager.shared.getObjects(limit: 10) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let objects):
+                    NetworkManager.shared.getObjects2 { result in
+                        self.dismissLoadingView()
+                        switch result {
+                        case .success(let objects2):
+                            var snapshot = self.diffableDataSource.snapshot()
+                            //topsection
+                            snapshot.appendSections([.topSection, .bottomSection])
+                            snapshot.appendItems(objects, toSection: .topSection)
+                            //bottomsection
+                            snapshot.appendItems(objects2, toSection: .bottomSection)
+                            DispatchQueue.main.async {  self.diffableDataSource.apply(snapshot) }
+                        case .failure(let failure):
+                            self.dismissLoadingView()
+                            print(failure)
+                        }
+                    }
+                case .failure(let failure):
+                    print(failure)
+                }
             }
         }
     }
+    
     
     init() {
         let layout = UICollectionViewCompositionalLayout {
@@ -118,37 +148,6 @@ class MainVC: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func getObjects() {
-        NetworkManager.shared.getObjects(page: 3, limit: 10) { result in
-            switch result {
-            case .success(let objects):
-                DispatchQueue.main.async {
-                    self.objects = objects
-                    self.collectionView.reloadData()
-                }
-               
-            case .failure(let failure):
-                print(failure)
-            }
-        }
-    }
-    
-    func getObjects2() {
-        NetworkManager.shared.getObjects2 { result in
-            switch result {
-            case .success(let objects):
-                DispatchQueue.main.async {
-                    self.objects2 = objects
-                    self.collectionView.reloadData()
-                }
-               
-            case .failure(let failure):
-                print(failure)
-            }
-        }
-    }
-   
-    
 }
 
 
@@ -164,10 +163,10 @@ extension MainVC {
         
     } */
     
-    override func numberOfSections (in collectionView:
-        UICollectionView) -> Int {
-        return 0
-    }
+//    override func numberOfSections (in collectionView:
+//        UICollectionView) -> Int {
+//        return 0
+//    }
     
    /* override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
@@ -187,12 +186,12 @@ extension MainVC {
         
     } */
     
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath) as! CompositionalHeader
-        header.label.text = "Specially Featured for you"
-        return header
-        
-    }
+//    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath) as! CompositionalHeader
+//        header.label.text = "Specially Featured for you"
+//        return header
+//
+//    }
     
 }
 
