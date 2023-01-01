@@ -86,17 +86,17 @@
 		09FAF401295F434900E5866A /* AssignmentPratilipi */ = {
 			isa = PBXGroup;
 			children = (
+				09FAF424296012EC00E5866A /* Model */,
 				09FAF43629605D8200E5866A /* Extensions */,
 				09FAF42F29604B3D00E5866A /* Cells */,
 				09FAF42E2960150400E5866A /* Custom */,
+				09FAF42B296014C100E5866A /* ViewControllers */,
 				09FAF42D296014E500E5866A /* ViewModel */,
-				09FAF42C296014D600E5866A /* Support */,
-				09FAF42B296014C100E5866A /* Views */,
 				09FAF42A296014B500E5866A /* Managers */,
 				09FAF4272960137900E5866A /* Utilities */,
-				09FAF424296012EC00E5866A /* Model */,
-				09FAF40B295F434F00E5866A /* Assets.xcassets */,
+				09FAF42C296014D600E5866A /* Support */,
 				09FAF410295F434F00E5866A /* Info.plist */,
+				09FAF40B295F434F00E5866A /* Assets.xcassets */,
 			);
 			path = AssignmentPratilipi;
 			sourceTree = "<group>";
@@ -127,13 +127,13 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
-		09FAF42B296014C100E5866A /* Views */ = {
+		09FAF42B296014C100E5866A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				09FAF416295F43C000E5866A /* MainVC.swift */,
 				09FAF418295F448600E5866A /* NewsVC.swift */,
 			);
-			path = Views;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		09FAF42C296014D600E5866A /* Support */ = {
