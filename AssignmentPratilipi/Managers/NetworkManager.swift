@@ -9,6 +9,9 @@ import UIKit
 
 //https://picsum.photos/v2/list?page=1&limit=10
 
+//i think here also i need to change the function
+
+
 class NetworkManager {
     
     static let shared = NetworkManager()
