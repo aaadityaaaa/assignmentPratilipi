@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09E050E7296CA68200C15039 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E050E6296CA68200C15039 /* ImageManager.swift */; };
 		09FAF403295F434900E5866A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF402295F434900E5866A /* AppDelegate.swift */; };
 		09FAF405295F434900E5866A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FAF404295F434900E5866A /* SceneDelegate.swift */; };
 		09FAF40C295F434F00E5866A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09FAF40B295F434F00E5866A /* Assets.xcassets */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		09E050E6296CA68200C15039 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		09FAF3FF295F434900E5866A /* AssignmentPratilipi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AssignmentPratilipi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09FAF402295F434900E5866A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		09FAF404295F434900E5866A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				09FAF422296011F200E5866A /* NetworkManager.swift */,
+				09E050E6296CA68200C15039 /* ImageManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 				09FAF43A29605F1500E5866A /* LoadingView.swift in Sources */,
 				09FAF423296011F200E5866A /* NetworkManager.swift in Sources */,
 				09FAF4292960138600E5866A /* ErrorMessage.swift in Sources */,
+				09E050E7296CA68200C15039 /* ImageManager.swift in Sources */,
 				09FAF43829605D9A00E5866A /* UIView+EXT.swift in Sources */,
 				09FAF417295F43C000E5866A /* MainVC.swift in Sources */,
 				09FAF43329604B9A00E5866A /* CustomImageView.swift in Sources */,

@@ -22,7 +22,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func createMainNavigationController() -> UINavigationController {
-        let mainVC =  MainVC()
+        let objectService: ObjectService = NetworkManager()
+        let viewModel = MainViewModel(objectService: objectService)
+        let mainVC =  MainVC(viewModel: viewModel)
         mainVC.title = "Pratilipi"
         mainVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
         return UINavigationController(rootViewController: mainVC)

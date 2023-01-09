@@ -7,20 +7,20 @@
 
 import UIKit
 
-//https://picsum.photos/v2/list?page=1&limit=10
+protocol ObjectService {
+    
+    func getObjects(limit: Int, completed: @escaping (Result<[Object], ErrorMessage>) -> Void)
+    
+    func getObjects2(completed: @escaping (Result<[Object2], ErrorMessage>) -> Void)
+    
+    func getObjectsAsync(limit: Int) async throws -> [Object]
+    
+    func getObjects2Async() async throws -> [Object2]
+    
+}
 
-//i think here also i need to change the function
 
-
-class NetworkManager {
-    
-    static let shared = NetworkManager()
-    private let baseURL = "https://picsum.photos/v2"
-    
-    let cache = NSCache<NSString, UIImage>()
-    
-    private init() {}
-    
+class NetworkManager: ObjectService {
     //old methods to fetch
     func getObjects(limit: Int, completed: @escaping (Result<[Object], ErrorMessage>) -> Void) {
         let endpoint = "https://api.github.com/users/sallen0400/followers?per_page=\(limit)&page=1"
@@ -96,39 +96,7 @@ class NetworkManager {
         task.resume()
     }
     
-    func downloadImageFromUrl(from urlString: String, completed: @escaping (UIImage?) -> Void) {
-            
-            let cacheKey = NSString(string: urlString)
-
-            if let image = cache.object(forKey: cacheKey) {
-                    completed(image)
-                
-                return
-            }
-            guard let url = URL(string: urlString) else {
-                completed(nil)
-                print("IMAGE DOWNLOAD LINK FOUND NIL")
-                return}
-            
-            let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                guard let self = self,
-                      error == nil,
-                      let response = response as? HTTPURLResponse,
-                      let data = data,
-                      let image = UIImage(data: data)
-                      else {
-                    print("IMAGE DOWNLOAD LINK FOUND NIL")
-                    completed(nil)
-                    return }
-                self.cache.setObject(image, forKey: cacheKey)
-                completed(image)
-            }
-            task.resume()
-    }
-    
-    
     //new methods to fetch
-    
     func getObjectsAsync(limit: Int) async throws -> [Object] {
         let endpoint = "https://api.github.com/users/sallen0400/followers?per_page=\(limit)&page=1"
         guard let url = URL(string: endpoint) else {

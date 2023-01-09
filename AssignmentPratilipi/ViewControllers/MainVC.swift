@@ -8,9 +8,9 @@
 import UIKit
 import SwiftUI
 
-class MainVC: LoadingVC {
+class MainVC: LoadingVC, MainViewModelOutput {
     
-    var viewModel = MainViewModel()
+    let viewModel: MainViewModel
     var objects: [Object] = []
     var objects2: [Object2] = []
     
@@ -23,7 +23,8 @@ class MainVC: LoadingVC {
         getData()
     }
     
-    init() {
+    init(viewModel: MainViewModel) {
+        self.viewModel = viewModel
         let layout = UICollectionViewCompositionalLayout {
             (sectionNumber, _) -> NSCollectionLayoutSection? in
             if sectionNumber == 0 {
@@ -34,35 +35,26 @@ class MainVC: LoadingVC {
             }
         }
         super.init(collectionViewLayout: layout)
+        self.viewModel.output = self
+
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    #warning("i would use the protocol func to simplify the networking thing and remove singleton maybe")
+
+
     private func getData() {
-        showLoadingView()
-        collectionView.dataSource = viewModel.dataSource
-        //for the header title above bottom section
-        viewModel.dataSource.supplementaryViewProvider = . some({
-            (collectionView, kind, indexPath) -> UICollectionReusableView? in
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerID", for: indexPath)
-            return header
-        })
-        
+        viewModel.fetchData(view: self)
+    /*    showLoadingView()
         if #available(iOS 16, *) {
-            var snapshot = viewModel.dataSource.snapshot()
-            snapshot.appendSections([.topSection, .bottomSection])
             Task {
                 do {
                     //top section
                     self.objects = try await NetworkManager.shared.getObjectsAsync(limit: 10)
-                    snapshot.appendItems(objects, toSection: .topSection)
                     //bottom section
                     self.objects2 = try await NetworkManager.shared.getObjects2Async()
-                    snapshot.appendItems(objects2, toSection: .bottomSection)
-                    DispatchQueue.main.async { self.viewModel.dataSource.apply(snapshot) }
+                    self.updateData(objects: objects, objects2: objects2)
                     self.dismissLoadingView()
                     print("ASYNC AWAIT IS RUNNING")
                 } catch {
@@ -73,21 +65,17 @@ class MainVC: LoadingVC {
         }
         else {
             //this works for iOS13
+            //topSection
             NetworkManager.shared.getObjects(limit: 10) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let objects):
+                    //bottomSection
                     NetworkManager.shared.getObjects2 { result in
                         self.dismissLoadingView()
                         switch result {
                         case .success(let objects2):
-                            var snapshot = self.viewModel.dataSource.snapshot()
-                            //topsection
-                            snapshot.appendSections([.topSection, .bottomSection])
-                            snapshot.appendItems(objects, toSection: .topSection)
-                            //bottomsection
-                            snapshot.appendItems(objects2, toSection: .bottomSection)
-                            DispatchQueue.main.async {  self.viewModel.dataSource.apply(snapshot) }
+                            self.updateData(objects: objects, objects2: objects2)
                         case .failure(let failure):
                             self.dismissLoadingView()
                             print(failure)
@@ -97,7 +85,15 @@ class MainVC: LoadingVC {
                     print(failure)
                 }
             }
-        }
+        }  */
+    }
+    
+    func updateData(objects: [Object], objects2: [Object2]) {
+        var snapshot = viewModel.dataSource.snapshot()
+        snapshot.appendSections([.topSection, .bottomSection])
+        snapshot.appendItems(objects, toSection: .topSection)
+        snapshot.appendItems(objects2, toSection: .bottomSection)
+        DispatchQueue.main.async {  self.viewModel.dataSource.apply(snapshot) }
     }
 
 }
